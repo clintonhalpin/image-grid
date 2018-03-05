@@ -92,10 +92,10 @@ function render(state) {
 }
 
 /**
- * [boot description]
+ * [addListeners description]
  * @return {[type]} [description]
  */
-function boot() {
+function addListeners() {
 	const images = document.querySelectorAll('.image');
 	for (var i = 0; i < images.length; i++) {
 		images[i].addEventListener('click', (e) => {
@@ -113,6 +113,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	fetchData(url).then((res) => {
   	state = Object.assign(state, { photos: res })
   	render(state)
-  	boot()
+  	addListeners()
   })
 });
