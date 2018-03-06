@@ -2,8 +2,8 @@
  * UI Components
  */
 const app = document.getElementById("app");
-const modal = document.getElementById("modal");
-const url = 'https://api.unsplash.com/photos?page=1&per_page=20&client_id=2af528ddceed2cfff8cf179322cd972ff6c54e772e471193cdbfc628d801dacd'
+// const url = 'https://api.unsplash.com/photos?page=1&per_page=20&client_id=2af528ddceed2cfff8cf179322cd972ff6c54e772e471193cdbfc628d801dacd'
+const url = 'https://api.unsplash.com/photos?page=1&per_page=20&client_id=ec4779e6804bf4e4c72ac5f5d70a81480712b24f2ecfe46494169d9b74ee9f83'
 
 /**
  * State
@@ -63,6 +63,29 @@ function renderPhoto(photo) {
 	return `<img id="${ photo.id }" class="image col col-3" src="${ photo.urls.small }" />`
 }
 
+
+function renderModalControls(state) {
+	return `<div class="modal__controls p2 right">
+						<a id="prev" class="btn rounded bg-white black mr2" href="#">Prev</a>
+						<a id="next" class="btn rounded bg-white black mr2" href="#">Next</a>
+						<a id="close" class="btn rounded bg-white black mr2" href="#">Close</a>
+					</div>`
+}
+
+function nextPhoto(state) {
+	const { selectedPhoto, photos } = state;
+	let selectedPhotoIdx = false;
+	photos.map((idx, photo) => {
+		if( selectedPhoto === photo.id ) {
+			selectedPhotoIdx = idx
+		}
+	})
+	if( selectedPhotoIdx ) {
+		state = Object.assign(state, { selectedPhoto : photos[9].id })
+		render(state)
+	}
+}
+
 /**
  * [renderModal description]
  * @param  {[type]} state [description]
@@ -71,15 +94,17 @@ function renderPhoto(photo) {
 function renderModal( state ) {
 	const { selectedPhoto, photos } = state;
 	let currentPhoto = false;
-
 	photos.map(photo => {
 		if( selectedPhoto === photo.id ) {
 			currentPhoto = photo
 		}
 	})
-	if( currentPhoto ) {
-		modal.innerHTML = renderPhoto(currentPhoto)
-	}
+	return [
+		`<div class="modal ${ currentPhoto ? 'modal--active' : ''}">`, 
+		renderModalControls(), 
+		currentPhoto ? renderPhoto(currentPhoto) : '', 
+		'</div>'
+	].join('')
 }
 
 /**
@@ -88,7 +113,8 @@ function renderModal( state ) {
  */
 function render(state) {
   let photos = state.photos.map(photo => renderPhoto(photo))
-  app.innerHTML = ['<div class="container">', ...photos, '</div>' ].join('');
+  app.innerHTML = [ renderModal(state), ...photos ].join('');
+  addListeners()
 }
 
 /**
@@ -96,14 +122,32 @@ function render(state) {
  * @return {[type]} [description]
  */
 function addListeners() {
+	
 	const images = document.querySelectorAll('.image');
+
 	for (var i = 0; i < images.length; i++) {
 		images[i].addEventListener('click', (e) => {
 			state = Object.assign(state, { selectedPhoto: e.target.id })
-			toggleClass(modal, 'modal--active')
-			renderModal(state)
+			render(state)
 		})
 	}
+
+	const close = document.getElementById("close");
+	const next = document.getElementById("next");
+	const prev = document.getElementById("prev");
+
+	close.addEventListener('click', e => {
+		state = Object.assign(state, { selectedPhoto: false })
+		render(state)
+	})
+
+	next.addEventListener('click', e => {
+		console.log('hello')
+		console.log(state)
+		nextPhoto(state)
+		console.log(state)
+	})
+
 }
 
 /**
@@ -113,6 +157,5 @@ document.addEventListener("DOMContentLoaded", () => {
 	fetchData(url).then((res) => {
   	state = Object.assign(state, { photos: res })
   	render(state)
-  	addListeners()
   })
 });

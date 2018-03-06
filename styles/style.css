@@ -17,17 +17,19 @@ p {
 }
 
 .modal {
-	z-index: -1;
+	display: none;
 	position: fixed;
 	top: 0;
-	bottom: 0;
 	left: 0;
-	width: 100%;
+	bottom: 0;
+	right: 0;
+	background: black;
+	text-align: center;
 }
 
 .modal--active {
+	display: block;
 	z-index: 101;
-	background: black;
 }
 
 .modal .image {
@@ -35,7 +37,8 @@ p {
 }
 
 .image {
-	opacity: .5;
+	cursor: pointer;
+	opacity: .75;
 }
 
 .image:hover {
