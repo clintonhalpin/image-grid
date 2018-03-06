@@ -32,7 +32,6 @@ p {
 	bottom: 0;
 	right: 0;	
 	display: none;
-	text-align: center;
 	overflow: scroll;
 }
 
@@ -105,6 +104,18 @@ p {
 	line-height: 1
 }
 
+.image--modal {
+	max-height: 75vh;
+}
+
+.image--modal:hover {
+	cursor: pointer;
+}
+
+.bg-light-gray {
+	background: #f9f9f9;
+}
+
 
 @media(min-width: 40rem) {
 	.image-col {
@@ -112,5 +123,6 @@ p {
 	}
 	.modal {
 		padding: 1rem;
+		overflow: hidden;
 	}
 }
