@@ -8,9 +8,19 @@ const app = document.getElementById("app");
  */
 let API_BASE = "https://api.unsplash.com/photos";
 let state = {};
-let initialState = {
+
+const initialState = {
+	page: 1,
+	loading: false,
   selectedPhoto: false,
   photos: []
+};
+
+const params = {
+  page: initialState.page,
+  per_page: 24,
+  client_id:
+    "ec4779e6804bf4e4c72ac5f5d70a81480712b24f2ecfe46494169d9b74ee9f83"
 };
 
 /**
@@ -28,14 +38,7 @@ function boot() {
   /**
    * Fetch Data from API, render app again
    */
-  const params = {
-    page: 10,
-    per_page: 24,
-    client_id:
-      "ec4779e6804bf4e4c72ac5f5d70a81480712b24f2ecfe46494169d9b74ee9f83"
-  };
   const endpoint = API_BASE + queryString(params);
-
   fetchData(endpoint).then(response => {
   	const formattedResponse = formatResponse(response, 'unsplash');
     setState({ photos: formattedResponse });
@@ -219,6 +222,7 @@ function addEventListeners() {
   const closeBtn = document.getElementById("close");
   const nextBtn = document.getElementById("next");
   const prevBtn = document.getElementById("prev");
+  const loadBtn = document.getElementById("load");
 
   if (overlay) {
     overlay.addEventListener("click", close);
@@ -234,6 +238,10 @@ function addEventListeners() {
 
   if (prevBtn) {
     prevBtn.addEventListener("click", prev);
+  }
+
+  if (loadBtn) {
+    loadBtn.addEventListener("click", load);
   }
 }
 
@@ -269,6 +277,23 @@ function prev(e) {
   e.preventDefault();
   changePhoto(state, "prev");
   render(state);
+}
+
+/**
+ * [load description]
+ * @param  {[type]} e [description]
+ * @return {[type]}   [description]
+ */
+function load(e) {
+	e.preventDefault();
+	setState({ loading: true })
+	params.page = state.page++;
+	let endpoint = API_BASE + queryString(params);
+	fetchData(endpoint).then(response => {
+		let formattedResponse = formatResponse(response, 'unsplash')
+		setState({ loading: false, photos : [...state.photos, ...formattedResponse] });
+		render(state);
+	})
 }
 
 /**
@@ -362,7 +387,20 @@ function renderPhotos(state) {
       	"></div>
     `
   );
-  return photos.join("");
+  return ['<div class="clearfix">', ...photos, '</div>' ].join("");
+}
+
+
+function renderLoader(state) {
+	let btn = `<a id="load" href="#" class="btn btn-primary col-12 bg-black center">Load More</a>`
+	if( state.loading ) {
+		btn = `<a class="btn btn-outline col-12 blue center">Loading...</a>`
+	}
+	return `
+		<div class="container clearfix p2">
+			${btn}
+		</div>
+	`
 }
 
 /**
@@ -375,7 +413,6 @@ function renderHeader(state) {
 		<div class="py3 px2">
 			<ul class="list-reset">
 				<li class="blue inline-block mr2">unsplash</li>
-				<li class="inline-block mr2">flikr</li>
 			</ul>
 			<h1 class="black line-height-1 m0">
 				recent photos ${state.photos ? "(" + state.photos.length + ")" : ""}
@@ -393,7 +430,8 @@ function render(state) {
   app.innerHTML = [
     renderHeader(state),
     renderModal(state),
-    renderPhotos(state)
+    renderPhotos(state),
+    renderLoader(state)
   ].join("");
   addEventListeners();
 }
