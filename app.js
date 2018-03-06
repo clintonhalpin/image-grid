@@ -4,23 +4,24 @@
 const app = document.getElementById("app");
 
 /**
- * State
+ * Api
  */
-let API_BASE = "https://api.unsplash.com/photos";
-let state = {};
-
-const initialState = {
-	page: 1,
-	loading: false,
-  selectedPhoto: false,
-  photos: []
-};
-
+const API_BASE = "https://api.unsplash.com/photos";
 const params = {
   page: initialState.page,
   per_page: 24,
-  client_id:
-    "ec4779e6804bf4e4c72ac5f5d70a81480712b24f2ecfe46494169d9b74ee9f83"
+  client_id: "ec4779e6804bf4e4c72ac5f5d70a81480712b24f2ecfe46494169d9b74ee9f83"
+};
+
+/**
+ * State
+ */
+let state = {};
+const initialState = {
+  page: 1,
+  loading: false,
+  selectedPhoto: false,
+  photos: []
 };
 
 /**
@@ -40,7 +41,7 @@ function boot() {
    */
   const endpoint = API_BASE + queryString(params);
   fetchData(endpoint).then(response => {
-  	const formattedResponse = formatResponse(response, 'unsplash');
+    const formattedResponse = formatResponse(response, "unsplash");
     setState({ photos: formattedResponse });
     render(state);
   });
@@ -51,28 +52,26 @@ function boot() {
  */
 
 /**
- * [formatResponse transform API response]
- * @param  {[type]} response [description]
- * @param  {[type]} provider [description]
- * @return {[type]}          [description]
+ * [formatResponse Not much to see here, we could easily implement other providers with this pattern]
+ * @param  {array}  response [description]
+ * @param  {string} provider [unsplash]
+ * @return {array}          [description]
  */
 function formatResponse(response, provider) {
+  if ("unsplash" === provider) {
+    return response.map(photo => {
+      return {
+        id: photo.id,
+        color: photo.color,
+        urls: photo.urls,
+        links: photo.links,
+        user: photo.user,
+        created_at: photo.created_at
+      };
+    });
+  }
 
-	if( 'unsplash' === provider ) {
-		return response.map(photo => {
-			return {
-				id: photo.id,
-				color: photo.color,
-				urls: photo.urls,
-				links: photo.links,
-				user: photo.user,
-				created_at: photo.created_at
-			}
-		})
-	}
-
-	return response;
-
+  return response;
 }
 
 /**
@@ -150,8 +149,8 @@ function findById(id, arr) {
  */
 
 /**
- * [fetchData Fetch data, and cache it locally]
- * @param  {string} endpoint [description]
+ * [fetchData Fetch data, and cache it in localStorage]
+ * @param  {string} endpoint  [https://api.image.com/featured]
  * @return {promise}          [description]
  */
 function fetchData(endpoint) {
@@ -280,21 +279,30 @@ function prev(e) {
 }
 
 /**
- * [load description]
+ * [load Load more data from unsplash]
  * @param  {[type]} e [description]
  * @return {[type]}   [description]
  */
 function load(e) {
-	e.preventDefault();
-	setState({ loading: true, page: state.page + 1 })
-	params.page = state.page;
-	let endpoint = API_BASE + queryString(params);
-	fetchData(endpoint).then(response => {
-		let formattedResponse = formatResponse(response, 'unsplash')
-		setState({ loading: false, photos : [...state.photos, ...formattedResponse] });
-		render(state);
-	})
+  e.preventDefault();
+  setState({ loading: true, page: state.page + 1 });
+  params.page = state.page;
+  let endpoint = API_BASE + queryString(params);
+
+  fetchData(endpoint).then(response => {
+    let formattedResponse = formatResponse(response, "unsplash");
+    setState({
+      loading: false,
+      photos: [...state.photos, ...formattedResponse]
+    });
+    render(state);
+  });
+
 }
+
+/**
+ * Render Methods
+ */
 
 /**
  * [renderModalControls description]
@@ -321,7 +329,7 @@ function renderModalPhoto(state) {
   if (!selectedPhoto) {
     return "";
   }
-  const photoDate = new Date(selectedPhoto.created_at)
+  const photoDate = new Date(selectedPhoto.created_at);
   return `
   	<div>
 	  	<div class="md-col md-col-9 center">
@@ -339,8 +347,10 @@ function renderModalPhoto(state) {
 					<p class="m0">
 						<a href="${selectedPhoto.user.links.html}">${selectedPhoto.user.name}</a>
 					</p>
-					<p class="m0 h6 gray">${ photoDate.toLocaleDateString() }, ${ photoDate.toLocaleTimeString() }</p>
-					<input class="field col-12 mt1" type="text" value="${selectedPhoto.links.html}" />
+					<p class="m0 h6 gray">${photoDate.toLocaleDateString()}, ${photoDate.toLocaleTimeString()}</p>
+					<input class="field col-12 mt1" type="text" value="${
+            selectedPhoto.links.html
+          }" />
 				</div>
 			</div>
 		</div>
@@ -371,7 +381,7 @@ function renderModal(state) {
  * @return {string}       [description]
  */
 function renderPhotos(state) {
-  if ( state.photos.length === 0 ) {
+  if (state.photos.length === 0) {
     return '<h1 class="center py4">Loading...</h1>';
   }
 
@@ -388,20 +398,19 @@ function renderPhotos(state) {
       	"></div>
     `
   );
-  return ['<div class="clearfix">', ...photos, '</div>' ].join("");
+  return ['<div class="clearfix">', ...photos, "</div>"].join("");
 }
 
-
 function renderLoader(state) {
-	let btn = `<a id="load" href="#" class="btn btn-primary col-12 bg-black center">Load More</a>`
-	if( state.photos.length === 0 ) {
-		return ''
-	}
-	return `
+  let btn = `<a id="load" href="#" class="btn btn-primary col-12 bg-black center">Load More</a>`;
+  if (state.photos.length === 0) {
+    return "";
+  }
+  return `
 		<div class="container clearfix p2">
 			${btn}
 		</div>
-	`
+	`;
 }
 
 /**
