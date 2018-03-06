@@ -13,6 +13,11 @@ let state = {
 	photos: []
 };
 
+function setState(nextState) {
+	state = Object.assign(state, nextState)
+	return state
+}
+
 /**
  * [fetchData description]
  * @param  {[type]} endpoint [description]
@@ -72,24 +77,32 @@ function renderPhoto(photo) {
 
 
 function renderModalControls(state) {
-	return `<div class="modal__controls p2 right-align">
+	return `<div class="modal__controls mb2 right-align">
 						<a id="close" class="btn btn-outline rounded black mr2 left" href="#">Back</a>
-						<a id="prev" class="btn rounded bg-white black mr2" href="#">Prev</a>
-						<a id="next" class="btn rounded bg-white black mr2" href="#">Next</a>
+						<a id="prev" class="btn btn-outline rounded black mr2" href="#">Prev</a>
+						<a id="next" class="btn btn-outline rounded black " href="#">Next</a>
 					</div>`
 }
 
-function nextPhoto(state) {
-	const { selectedPhoto, photos } = state;
+function cyclePhoto(state, direction = 'next') {
+	let { selectedPhoto, photos } = state;
 	let selectedPhotoIdx = false;
-	photos.map((idx, photo) => {
+	let data = photos.slice()
+
+	if( 'prev' === direction ) {
+		data = data.reverse()
+	}
+
+	data.map((photo, idx) => {
 		if( selectedPhoto === photo.id ) {
 			selectedPhotoIdx = idx
 		}
 	})
-	if( selectedPhotoIdx ) {
-		state = Object.assign(state, { selectedPhoto : photos[9].id })
-		render(state)
+
+	if( selectedPhotoIdx >= 0 ) {
+		let next = photos[ selectedPhotoIdx + 1 ];
+		next = next ? next.id : photos[0].id
+		setState({ selectedPhoto : next })
 	}
 }
 
@@ -107,7 +120,7 @@ function renderModal( state ) {
 		}
 	})
 	return [
-		`<div class="modal p2 ${ currentPhoto ? 'modal--active' : ''}">`, 
+		`<div class="modal ${ currentPhoto ? 'modal--active' : ''}">`, 
 		'<div class="modal__inner p2 bg-white rounded">',
 		renderModalControls(), 
 		currentPhoto ? renderPhoto(currentPhoto) : '', 
@@ -136,18 +149,29 @@ function addListeners() {
 
 	for (var i = 0; i < images.length; i++) {
 		images[i].addEventListener('click', (e) => {
-			state = Object.assign(state, { selectedPhoto: e.target.id })
+			toggleClass(document.body, 'no-scroll')
+			setState({ selectedPhoto: e.target.id })
 			render(state)
 		})
 	}
 
 	document.getElementById("close").addEventListener('click', e => {
-		state = Object.assign(state, { selectedPhoto: false })
+		e.preventDefault()
+		toggleClass(document.body, 'no-scroll')
+		setState({ selectedPhoto: false })
 		render(state)
 	})
 
 	document.getElementById("next").addEventListener('click', e => {
-		nextPhoto(state)
+		e.preventDefault()
+		cyclePhoto(state, 'next')
+		render(state)
+	})
+
+	document.getElementById("prev").addEventListener('click', e => {
+		e.preventDefault()
+		cyclePhoto(state, "prev")
+		render(state)
 	})
 
 }
@@ -157,7 +181,6 @@ function addListeners() {
  */
 document.addEventListener("DOMContentLoaded", () => {
 	fetchData(url, 'photos').then((res) => {
-		console.log(res)
   	state = Object.assign(state, { photos: res })
   	render(state)
   })
