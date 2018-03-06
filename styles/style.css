@@ -23,9 +23,13 @@ p {
 	left: 0;
 	bottom: 0;
 	right: 0;
-	background: black;
+	background: rgba(0,0,0,.5);
 	text-align: center;
 	overflow: scroll;
+}
+
+.modal__inner {
+	min-height: 100vh;
 }
 
 .modal--active {
@@ -34,10 +38,18 @@ p {
 }
 
 .image-col {
-	height: 35vh;
+	height: 25vh;
 	background-size: cover;
 	background-repeat: no-repeat;
 	position: relative;
+	background-color: gray;
+	border: 1px solid white;
+}
+
+@media(min-width: 40rem) {
+	.image-col {
+		height: 50vh;
+	}
 }
 
 .image-col:before {
@@ -58,12 +70,17 @@ p {
 
 .modal .image {
 	opacity: 1;
+	max-height: 100vh
 }
 
 .image {
-	cursor: pointer;
+	cursor: zoom-in;
 }
 
 .image:hover {
 	opacity: 1;
+}
+
+.line-height-1 {
+	line-height: 1
 }

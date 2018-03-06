@@ -3,7 +3,7 @@
  */
 const app = document.getElementById("app");
 // const url = 'https://api.unsplash.com/photos?page=1&per_page=20&client_id=2af528ddceed2cfff8cf179322cd972ff6c54e772e471193cdbfc628d801dacd'
-const url = 'https://api.unsplash.com/photos?page=1&per_page=20&client_id=ec4779e6804bf4e4c72ac5f5d70a81480712b24f2ecfe46494169d9b74ee9f83'
+const url = 'https://api.unsplash.com/photos?page=3&per_page=24&client_id=ec4779e6804bf4e4c72ac5f5d70a81480712b24f2ecfe46494169d9b74ee9f83'
 
 /**
  * State
@@ -18,14 +18,14 @@ let state = {
  * @param  {[type]} endpoint [description]
  * @return {[type]}          [description]
  */
-function fetchData(endpoint, cacheKey = false) {
-	const cache = localStorage.getItem(cacheKey)
+function fetchData(endpoint) {
+	const cache = localStorage.getItem(endpoint)
 	const p = new Promise((resolve, reject) => {
 		const options = { 
 			method: 'GET',
 		};
 
-		if( cacheKey && cache ) {
+		if( cache ) {
 			resolve(JSON.parse(cache))
 		} else {
 			fetch(endpoint, options).then((response) => {
@@ -34,9 +34,7 @@ function fetchData(endpoint, cacheKey = false) {
 			  }
 			  return response.json()
 			}).then((json) => {
-				if( cacheKey ) {
-			  	localStorage.setItem(cacheKey, JSON.stringify(json))
-			  }
+			  localStorage.setItem(endpoint, JSON.stringify(json))
 			 	resolve(json)
 			})
 		}
@@ -75,7 +73,7 @@ function renderPhoto(photo) {
 
 function renderModalControls(state) {
 	return `<div class="modal__controls p2 right-align">
-						<a id="close" class="btn btn-outline rounded white mr2 left" href="#">Back</a>
+						<a id="close" class="btn btn-outline rounded black mr2 left" href="#">Back</a>
 						<a id="prev" class="btn rounded bg-white black mr2" href="#">Prev</a>
 						<a id="next" class="btn rounded bg-white black mr2" href="#">Next</a>
 					</div>`
@@ -109,9 +107,11 @@ function renderModal( state ) {
 		}
 	})
 	return [
-		`<div class="modal ${ currentPhoto ? 'modal--active' : ''}">`, 
+		`<div class="modal p2 ${ currentPhoto ? 'modal--active' : ''}">`, 
+		'<div class="modal__inner p2 bg-white rounded">',
 		renderModalControls(), 
 		currentPhoto ? renderPhoto(currentPhoto) : '', 
+		'</div>',
 		'</div>'
 	].join('')
 }
