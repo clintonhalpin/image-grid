@@ -18,19 +18,28 @@ let state = {
  * @param  {[type]} endpoint [description]
  * @return {[type]}          [description]
  */
-function fetchData(endpoint) {
+function fetchData(endpoint, cacheKey = false) {
+	const cache = localStorage.getItem(cacheKey)
 	const p = new Promise((resolve, reject) => {
 		const options = { 
 			method: 'GET',
 		};
-		fetch(endpoint, options).then((response) => {
-		  if( 200 !== response.status ) {
-		    reject('Error')
-		  }
-		  return response.json()
-		}).then((json) => {
-		  resolve(json)
-		})
+
+		if( cacheKey && cache ) {
+			resolve(JSON.parse(cache))
+		} else {
+			fetch(endpoint, options).then((response) => {
+			  if( 200 !== response.status ) {
+			    reject('Error')
+			  }
+			  return response.json()
+			}).then((json) => {
+				if( cacheKey ) {
+			  	localStorage.setItem(cacheKey, JSON.stringify(json))
+			  }
+			 	resolve(json)
+			})
+		}
 	})
 	return p
 }
@@ -60,15 +69,15 @@ function toggleClass(el, className) {
  * @return {[type]}       [description]
  */
 function renderPhoto(photo) {
-	return `<img id="${ photo.id }" class="image" src="${ photo.urls.small }" />`
+	return `<img id="${ photo.id }" class="image" src="${ photo.urls.regular }" />`
 }
 
 
 function renderModalControls(state) {
 	return `<div class="modal__controls p2 right-align">
+						<a id="close" class="btn btn-outline rounded white mr2 left" href="#">Back</a>
 						<a id="prev" class="btn rounded bg-white black mr2" href="#">Prev</a>
 						<a id="next" class="btn rounded bg-white black mr2" href="#">Next</a>
-						<a id="close" class="btn rounded bg-white black mr2" href="#">Close</a>
 					</div>`
 }
 
@@ -112,7 +121,7 @@ function renderModal( state ) {
  * @return {[type]} [description]
  */
 function render(state) {
-  let photos = state.photos.map(photo => renderPhoto(photo))
+  let photos = state.photos.map(photo => `<div id="${photo.id}" class="image image-col col col-6 md-col md-col-3" style="background-image:url(${photo.urls.regular})"></div>`)
   app.innerHTML = [ renderModal(state), ...photos ].join('');
   addListeners()
 }
@@ -132,20 +141,13 @@ function addListeners() {
 		})
 	}
 
-	const close = document.getElementById("close");
-	const next = document.getElementById("next");
-	const prev = document.getElementById("prev");
-
-	close.addEventListener('click', e => {
+	document.getElementById("close").addEventListener('click', e => {
 		state = Object.assign(state, { selectedPhoto: false })
 		render(state)
 	})
 
-	next.addEventListener('click', e => {
-		console.log('hello')
-		console.log(state)
+	document.getElementById("next").addEventListener('click', e => {
 		nextPhoto(state)
-		console.log(state)
 	})
 
 }
@@ -154,7 +156,8 @@ function addListeners() {
  * Fetch the Initial data, and render the app
  */
 document.addEventListener("DOMContentLoaded", () => {
-	fetchData(url).then((res) => {
+	fetchData(url, 'photos').then((res) => {
+		console.log(res)
   	state = Object.assign(state, { photos: res })
   	render(state)
   })

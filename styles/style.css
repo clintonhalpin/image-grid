@@ -25,11 +25,35 @@ p {
 	right: 0;
 	background: black;
 	text-align: center;
+	overflow: scroll;
 }
 
 .modal--active {
 	display: block;
+	z-index: 201;
+}
+
+.image-col {
+	height: 35vh;
+	background-size: cover;
+	background-repeat: no-repeat;
+	position: relative;
+}
+
+.image-col:before {
+	content: "";
+	background: #000;
+	opacity: 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
 	z-index: 101;
+}
+
+.image-col:hover:before {
+	opacity: .5;
 }
 
 .modal .image {
@@ -38,7 +62,6 @@ p {
 
 .image {
 	cursor: pointer;
-	opacity: .75;
 }
 
 .image:hover {
