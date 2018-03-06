@@ -371,8 +371,8 @@ function renderModal(state) {
  * @return {string}       [description]
  */
 function renderPhotos(state) {
-  if (!state.photos) {
-    return '<h1 class="center">Loading...</h1>';
+  if ( state.photos.length === 0 ) {
+    return '<h1 class="center py4">Loading...</h1>';
   }
 
   let classNames = "image image-col col col-6 md-col md-col-3";
@@ -394,8 +394,8 @@ function renderPhotos(state) {
 
 function renderLoader(state) {
 	let btn = `<a id="load" href="#" class="btn btn-primary col-12 bg-black center">Load More</a>`
-	if( state.loading ) {
-		btn = `<a class="btn btn-outline col-12 blue center">Loading...</a>`
+	if( state.photos.length === 0 ) {
+		return ''
 	}
 	return `
 		<div class="container clearfix p2">
