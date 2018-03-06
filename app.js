@@ -1,8 +1,7 @@
 /**
- * UI Components
+ * Selectors
  */
 const app = document.getElementById("app");
-
 /**
  * Kick off the app
  */
@@ -115,6 +114,11 @@ function renderPhoto(photo) {
   return `<img id="${photo.id}" class="image" src="${photo.urls.regular}" />`;
 }
 
+/**
+ * [renderModalControls description]
+ * @param  {[type]} state [description]
+ * @return {[type]}       [description]
+ */
 function renderModalControls(state) {
   return `<div class="modal__controls mb2 right-align">
 						<a id="close" class="btn btn-outline rounded black mr2 left" href="#">Back</a>
@@ -209,19 +213,13 @@ function addListeners() {
   document.getElementById("close").addEventListener("click", close);
   document.getElementById("next").addEventListener("click", next);
   document.getElementById("prev").addEventListener("click", prev);
-
-  document.body.addEventListener("keydown", e => {
-    switch (e.keyCode) {
-      case 39:
-        next(e);
-        break;
-      case 37:
-        prev(e);
-        break;
-    }
-  });
 }
 
+/**
+ * [close description]
+ * @param  {[type]} e [description]
+ * @return {[type]}   [description]
+ */
 function close(e) {
 	e.preventDefault();
 	toggleClass(document.body, "no-scroll");

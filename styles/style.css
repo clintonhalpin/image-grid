@@ -4,6 +4,7 @@
 
 html,body {
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	background: #f9f9f9;
 }
 
 .no-scroll {
@@ -18,6 +19,10 @@ h5,
 h6,
 p {
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.black {
+	color: #2c2d30;
 }
 
 .modal {
