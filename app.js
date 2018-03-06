@@ -4,16 +4,6 @@
 const app = document.getElementById("app");
 
 /**
- * Api
- */
-const API_BASE = "https://api.unsplash.com/photos";
-const params = {
-  page: initialState.page,
-  per_page: 24,
-  client_id: "ec4779e6804bf4e4c72ac5f5d70a81480712b24f2ecfe46494169d9b74ee9f83"
-};
-
-/**
  * State
  */
 let state = {};
@@ -22,6 +12,16 @@ const initialState = {
   loading: false,
   selectedPhoto: false,
   photos: []
+};
+
+/**
+ * Api
+ */
+const API_BASE = "https://api.unsplash.com/photos";
+const params = {
+  page: initialState.page,
+  per_page: 24,
+  client_id: "ec4779e6804bf4e4c72ac5f5d70a81480712b24f2ecfe46494169d9b74ee9f83"
 };
 
 /**
