@@ -286,8 +286,8 @@ function prev(e) {
  */
 function load(e) {
 	e.preventDefault();
-	setState({ loading: true })
-	params.page = state.page++;
+	setState({ loading: true, page: state.page + 1 })
+	params.page = state.page;
 	let endpoint = API_BASE + queryString(params);
 	fetchData(endpoint).then(response => {
 		let formattedResponse = formatResponse(response, 'unsplash')
@@ -304,7 +304,7 @@ function load(e) {
 function renderModalControls(state) {
   return `
 		<div class="modal__controls mb2 right-align">
-			<a id="close" class="btn btn-outline rounded black mr2 left" href="#">&times;</a>
+			<a id="close" class="btn btn-outline rounded black mr2 left" href="#" style="font-size: 24px">&times;</a>
 			<a id="prev" class="btn btn-outline rounded black" href="#">Prev</a>
 			<a id="next" class="btn btn-outline rounded black " href="#">Next</a>			
 		</div>
@@ -334,7 +334,7 @@ function renderModalPhoto(state) {
 				/>
 				</a>
 			</div>
-			<div class="md-col md-col-3 px2">
+			<div class="md-col md-col-3">
 				<div class="border p2 rounded bg-light-gray">
 					<p class="m0">
 						<a href="${selectedPhoto.user.links.html}">${selectedPhoto.user.name}</a>
@@ -381,8 +381,9 @@ function renderPhotos(state) {
       <div 
       	id="${photo.id}" 
       	class="${classNames}" 
+      	tabindex="0"
       	style="
-      		background-image:url(${photo.urls.regular}); 
+      		background-image:url(${photo.urls.small}); 
       		background-color: ${photo.color}
       	"></div>
     `
@@ -415,7 +416,7 @@ function renderHeader(state) {
 				<li class="blue inline-block mr2">unsplash</li>
 			</ul>
 			<h1 class="black line-height-1 m0">
-				recent photos ${state.photos ? "(" + state.photos.length + ")" : ""}
+				recent photos
 			</h1>
 		</div>
 	`;

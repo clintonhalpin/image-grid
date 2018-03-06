@@ -2,15 +2,12 @@
 	box-sizing: border-box;
 }
 
-html,body {
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+html,
+body {
 	background: #f9f9f9;
 }
 
-.no-scroll {
-	overflow: hidden;
-}
-
+html,body,
 h1,
 h2,
 h3,
@@ -21,42 +18,49 @@ p {
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
-.black {
-	color: #2c2d30;
+.no-scroll {
+	overflow: hidden;
 }
 
-.modal {
+/**
+ * Modal
+ */
+
+.modal,
+.modal__overlay {
 	position: fixed;
 	top: 0;
 	left: 0;
 	bottom: 0;
 	right: 0;	
+}
+
+.modal {
 	display: none;
 	overflow: scroll;
-}
-
-.modal__overlay {
-	cursor: pointer;
-	position: fixed;
-	top: 0;
-	left: 0;
-	bottom: 0;
-	right: 0;
-	background: rgba(0,0,0,.5);
-}
-
-.modal__inner {
-	min-height: 100vh;
-	margin: 0 auto;
-	max-width: 1280px;
-	z-index: 201;
-	position: relative;
 }
 
 .modal--active {
 	display: block;
 	z-index: 201;
 }
+
+.modal__overlay {
+	cursor: pointer;
+	background: rgba(0,0,0,.5);
+}
+
+.modal__inner {
+	min-height: 100vh;
+	max-width: 1280px;	
+	margin: 0 auto;
+	z-index: 201;
+	position: relative;
+}
+
+/**
+ * Image Cell
+ */
 
 .image-col {
 	height: 25vh;
@@ -87,10 +91,9 @@ p {
 	opacity: .7;
 }
 
-.modal .image {
-	opacity: 1;
-	max-height: 100vh
-}
+/**
+ * Image
+ */
 
 .image {
 	cursor: zoom-in;
@@ -98,10 +101,6 @@ p {
 
 .image:hover {
 	opacity: 1;
-}
-
-.line-height-1 {
-	line-height: 1
 }
 
 .image--modal {
@@ -112,10 +111,21 @@ p {
 	cursor: pointer;
 }
 
+/**
+ * Utils
+ */
+
+.line-height-1 {
+	line-height: 1
+}
+
 .bg-light-gray {
 	background: #f9f9f9;
 }
 
+/**
+ * Just desktop overrides for now
+ */
 
 @media(min-width: 40rem) {
 	.image-col {
