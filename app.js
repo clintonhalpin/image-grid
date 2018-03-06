@@ -14,14 +14,10 @@ let initialState = {
 };
 
 /**
- * Boot the App
+ * Listen for Document, to be ready and boot the app up!
  */
 document.addEventListener("DOMContentLoaded", boot);
 
-/**
- * [boot Start the application]
- * @return {side-effect} [description]
- */
 function boot() {
   /**
    * Set state, do first render
@@ -33,13 +29,16 @@ function boot() {
    * Fetch Data from API, render app again
    */
   const params = {
-    page: 4,
+    page: 10,
     per_page: 24,
     client_id:
       "ec4779e6804bf4e4c72ac5f5d70a81480712b24f2ecfe46494169d9b74ee9f83"
   };
-  fetchData(API_BASE + queryString(params)).then(response => {
-    setState({ photos: response });
+  const endpoint = API_BASE + queryString(params);
+
+  fetchData(endpoint).then(response => {
+  	const formattedResponse = formatResponse(response, 'unsplash');
+    setState({ photos: formattedResponse });
     render(state);
   });
 }
@@ -47,6 +46,31 @@ function boot() {
 /**
  * Utility functions
  */
+
+/**
+ * [formatResponse transform API response]
+ * @param  {[type]} response [description]
+ * @param  {[type]} provider [description]
+ * @return {[type]}          [description]
+ */
+function formatResponse(response, provider) {
+
+	if( 'unsplash' === provider ) {
+		return response.map(photo => {
+			return {
+				id: photo.id,
+				color: photo.color,
+				urls: photo.urls,
+				links: photo.links,
+				user: photo.user,
+				created_at: photo.created_at
+			}
+		})
+	}
+
+	return response;
+
+}
 
 /**
  * [queryString description]
@@ -158,7 +182,7 @@ function fetchData(endpoint) {
  * @param  {[type]} direction [description]
  * @return {[type]}           [description]
  */
-function changePhoto(state, direction) {
+function changePhoto(state, direction = "next") {
   let { selectedPhoto, photos } = state;
   let currentPhoto = findById(selectedPhoto.id, state.photos);
   let nextIndex =
@@ -255,7 +279,7 @@ function prev(e) {
 function renderModalControls(state) {
   return `
 		<div class="modal__controls mb2 right-align">
-			<a id="close" class="btn btn-outline rounded black mr2 left" href="#">Back</a>
+			<a id="close" class="btn btn-outline rounded black mr2 left" href="#">&times;</a>
 			<a id="prev" class="btn btn-outline rounded black" href="#">Prev</a>
 			<a id="next" class="btn btn-outline rounded black " href="#">Next</a>			
 		</div>
@@ -285,11 +309,12 @@ function renderModalPhoto(state) {
 				/>
 				</a>
 			</div>
-			<div class="md-col md-col-3">
-				<div class="border p2">
+			<div class="md-col md-col-3 px2">
+				<div class="border p2 rounded bg-light-gray">
 					<p class="m0">
-						<a href="${selectedPhoto.user.links.html}">${selectedPhoto.user.name}</a> on ${ photoDate.toLocaleDateString() }, ${ photoDate.toLocaleTimeString() }
+						<a href="${selectedPhoto.user.links.html}">${selectedPhoto.user.name}</a>
 					</p>
+					<p class="m0 h6 gray">${ photoDate.toLocaleDateString() }, ${ photoDate.toLocaleTimeString() }</p>
 					<input class="field col-12 mt1" type="text" value="${selectedPhoto.links.html}" />
 				</div>
 			</div>
@@ -348,8 +373,12 @@ function renderPhotos(state) {
 function renderHeader(state) {
   return `
 		<div class="py3 px2">
+			<ul class="list-reset">
+				<li class="blue inline-block mr2">unsplash</li>
+				<li class="inline-block mr2">flikr</li>
+			</ul>
 			<h1 class="black line-height-1 m0">
-				all files ${state.photos ? "(" + state.photos.length + ")" : ""}
+				recent photos ${state.photos ? "(" + state.photos.length + ")" : ""}
 			</h1>
 		</div>
 	`;

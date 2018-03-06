@@ -112,6 +112,10 @@ p {
 	cursor: pointer;
 }
 
+.bg-light-gray {
+	background: #f9f9f9;
+}
+
 
 @media(min-width: 40rem) {
 	.image-col {
@@ -119,5 +123,6 @@ p {
 	}
 	.modal {
 		padding: 1rem;
+		overflow: hidden;
 	}
 }
