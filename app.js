@@ -60,12 +60,12 @@ function toggleClass(el, className) {
  * @return {[type]}       [description]
  */
 function renderPhoto(photo) {
-	return `<img id="${ photo.id }" class="image col col-3" src="${ photo.urls.small }" />`
+	return `<img id="${ photo.id }" class="image" src="${ photo.urls.small }" />`
 }
 
 
 function renderModalControls(state) {
-	return `<div class="modal__controls p2 right">
+	return `<div class="modal__controls p2 right-align">
 						<a id="prev" class="btn rounded bg-white black mr2" href="#">Prev</a>
 						<a id="next" class="btn rounded bg-white black mr2" href="#">Next</a>
 						<a id="close" class="btn rounded bg-white black mr2" href="#">Close</a>
