@@ -1,0 +1,19 @@
+{
+  "name": "image-grid",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clintonhalpin/image-grid.git"
+  },
+  "author": "@clintonhalpin",
+  "license": "ISC",
+  "scripts": {
+    "start": "serve",
+    "pretty": "prettier app.js --write"
+  },
+  "dependencies": {
+    "serve": "^6.5.2"
+  }
+}
