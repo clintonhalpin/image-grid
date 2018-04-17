@@ -1,10 +1,10 @@
-# photo gallery
+# image-grid
 
 ## get started
 - Open index.html in a web browser :)
 
 ## view a demo
-- https://image-grid-dzdrgybeug.now.sh
+- https://clintonhalpin.github.io/image-grid/
 
 ## iterations
 in an effort to show my work take a look at screenshots to show how I built out the app. 
