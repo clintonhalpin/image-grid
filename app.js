@@ -382,7 +382,7 @@ function renderPhotos(state) {
       	"></div>
     `
   );
-  return ['<div class="clearfix">', ...photos, "</div>"].join("");
+  return `<div class="clearfix">${photos.join("")}</div>`;
 }
 
 function renderLoader(state) {
