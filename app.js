@@ -59,18 +59,15 @@ function boot() {
  */
 function formatResponse(response, provider) {
   if ("unsplash" === provider) {
-    return response.map(photo => {
-      return {
-        id: photo.id,
-        color: photo.color,
-        urls: photo.urls,
-        links: photo.links,
-        user: photo.user,
-        created_at: photo.created_at
-      };
-    });
+    return response.map(photo => ({
+      id: photo.id,
+      color: photo.color,
+      urls: photo.urls,
+      links: photo.links,
+      user: photo.user,
+      created_at: photo.created_at
+    }));
   }
-
   return response;
 }
 
@@ -92,17 +89,6 @@ function queryString(params) {
 function setState(nextState) {
   state = Object.assign(state, nextState);
   return state;
-}
-
-/**
- * [queryString build a query string from object]
- * @return {string} [description]
- */
-function queryString(params) {
-  let query = Object.keys(params)
-    .map(key => key + "=" + params[key])
-    .join("&");
-  return "?" + query;
 }
 
 /**
@@ -155,7 +141,7 @@ function findById(id, arr) {
  */
 function fetchData(endpoint) {
   const cache = localStorage.getItem(endpoint);
-  const p = new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const options = {
       method: "GET"
     };
@@ -175,7 +161,6 @@ function fetchData(endpoint) {
         });
     }
   });
-  return p;
 }
 
 /**
@@ -297,7 +282,6 @@ function load(e) {
     });
     render(state);
   });
-
 }
 
 /**
