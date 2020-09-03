@@ -14,6 +14,6 @@
     "pretty": "prettier app.js --write"
   },
   "dependencies": {
-    "serve": "^6.5.2"
+    "serve": "^11.3.2"
   }
 }
